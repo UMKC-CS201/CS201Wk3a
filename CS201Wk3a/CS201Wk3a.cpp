@@ -5,6 +5,7 @@
 
 int main()
 {
-    example3a();
+    //example3aPart1();
+    example3aPart2();
 }
 

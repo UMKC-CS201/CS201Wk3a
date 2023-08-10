@@ -16,6 +16,7 @@ void example1() {
 }
 
 void example2() {
+    //issues with combining different types of stream input 
     int n;
     string s1;
     cout << "Enter a number: ";
@@ -60,41 +61,128 @@ void example4() {
     }
     cout << outString;
 }
-void example3a() {
+void example3aPart1() {
 
     //example1();
     //example2();
     //example3();
-    example4();
+    //example4();
 
-    /*
-    char char1[] = "This too shall pass (or not)";
-    char* ptr = char1;
-    while ((ptr = strchr(ptr, 'o')) != nullptr) {
-        *ptr++ = toupper(*ptr);
+}
+
+void example5() {
+    //Demonstration of File I/O
+    ifstream inFile;
+    ofstream outFile;
+    
+    inFile.open("input5.txt");
+    outFile.open("output5.txt");
+
+    if (!inFile.good()) {
+        cout << "Unable to open input file/n";
+        return;
     }
-    cout << char1 << endl;
+    //find average of the odd values
+    int next, sum = 0, count = 0;
+    while (inFile >> next) {
+        if (next % 2 == 1) {
+            sum += next;
+            count += 1;
+            outFile << next << " ";
+        }
+    }
+    outFile << "The average of the odd numbers is: " << static_cast<double>(sum) / count << endl;
+    outFile.close();
+    inFile.close();
+}
 
-    for (int i = 0; i < strlen(char1); i++) {
-        if (char1[i] == 'o')
-            char1[i] = toupper(char1[i]);
+void example6() {
+    //Demonstration of File I/O & CSV file input using string stream & output formatting
+    ifstream inFile;
+    ofstream outFile;
+ 
+    inFile.open("input6.txt");
+    outFile.open("output6.txt");
+
+    if (!inFile.good()) {
+        cout << "Unable to open input file/n";
+        return;
+    }
+ 
+    //find average for each student
+    stringstream inSS;
+    string inLine, temp;
+    vector<string> row;
+    int sum;
+    while (getline(inFile, inLine)) {
+        stringstream inSS(inLine);                 //copy input line to stringstream
+        row.clear();                          //clear vector of previous row information
+        sum = 0;
+        while (getline(inSS, temp, ',')) {
+            row.push_back(temp);              //loop as long as there are commas - push each value onto row
+        }
+        outFile << row[0] << "  " << setw(15) << left << row[1] << right << '\t';  //print id and name
+        sum = stoi(row[2]) + stoi(row[3]) + stoi(row[4]);  //add 3 values together
+        outFile << setprecision(2) << fixed << static_cast<double>(sum) / 3 << endl;
+    }
+    outFile.close();
+    inFile.close();
+}
+
+void example7() {
+    //Demonstration of File I/O & CSV file input using string stream & vector manipulation
+    ifstream inFile;
+    ofstream outFile;
+
+    inFile.open("input7.txt");
+    outFile.open("output7.txt");
+
+    if (!inFile.good()) {
+        cout << "Unable to open input file/n";
+        return;
     }
 
-    char char3;
-    string str1 = "";
-    cin.get(char3);
-    while (char3 != '\n') {
-        str1 += char3;
+    //find average for each student
+    stringstream inSS;
+    string inLine, temp;
+    vector<string> row, names;
+    vector<string>::iterator it;
 
-        cin.get(char3);
+    int sum;
+    while (getline(inFile, inLine)) {
+        stringstream inSS(inLine);                 //copy input line to stringstream
+        row.clear();                          //clear vector of previous row information
+        sum = 0;
+        while (getline(inSS, temp, ',')) {
+            row.push_back(temp);              //loop as long as there are commas - push each value onto row
+        }
+        if (row[0] == "a") 
+            names.push_back(row[1]);
+        else if (row[0] == "d") {
+            it = find(names.begin(), names.end(), row[1]);
+            if (it != names.end())
+                names.erase(it);
+        }
+        else if (row[0] == "r") {
+            replace(names.begin(), names.end(), row[1], row[2]);  //replace is found in algorithms
+            //it = find(names.begin(), names.end(), row[1]);
+            //if (it != names.end()) {
+                //names.erase(it);
+                //names.push_back(row[2]);
+            //}
+        }
     }
+    for (int i = 0; i < names.size(); i++)
+        outFile << names.at(i) << endl;   
 
-    str1 = "This is my line";
-    int pos = str1.find("i");
-    while (pos >= 0) {
-        str1.replace(pos, 1, "X");
-        pos = str1.find("i");
-    }
-    cout << str1 << endl;
-    */
+    outFile.close();
+    inFile.close();
+}
+
+void example3aPart2() {
+
+    //example5();
+    //example6();
+    example7();
+
 }
